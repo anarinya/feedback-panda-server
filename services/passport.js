@@ -1,6 +1,20 @@
 const passport = require('passport');
 const GoogleStrategy = require('passport-google-oauth20').Strategy;
 
+const User = require('mongoose').model('users');
+
+// Generate identifying information for the user
+passport.serializeUser((user, done) => {
+  done(null, user.id);
+});
+
+// Turn the user ID into a user
+passport.deserializeUser((id, done) => {
+  User.findById(id)
+    .then(user => done(null, user))
+    .catch(err => done(err, null));
+});
+
 // Setup PassportJS Google OAuth Strategy
 // This will run when called from index.js
 passport.use(new GoogleStrategy({
@@ -9,8 +23,17 @@ passport.use(new GoogleStrategy({
   clientSecret: process.env.GOOGLE_CLIENT_SECRET,
   callbackURL: '/auth/google/callback'
 }, (accessToken, refreshToken, profile, done) => {
-  // Print token on successful authentication
-  console.log(`Access token: ${accessToken}`);
-  console.log(`Refresh token: ${refreshToken}`);
-  console.log(`Profile: ${JSON.stringify(profile)}`);
+  User.findOne({ googleID: profile.id })
+    .then((existingUser) => {
+      if (!existingUser) { 
+        // If there is no pre-existing user, create the user
+        new User({ googleID: profile.id })
+          .save()
+          .then(user => done(null, user));
+      }
+      // If there is already a pre-existing user, stop and call done
+      done(null, existingUser);
+    })
+    // Catch any errors that happen when attempting to query for the user
+    .catch(err => done(err, null));
 }));
