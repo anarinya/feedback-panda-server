@@ -21,7 +21,8 @@ passport.use(new GoogleStrategy({
   // Env vars obtained from index.js dotenv require
   clientID: process.env.GOOGLE_CLIENT_ID,
   clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-  callbackURL: '/auth/google/callback'
+  callbackURL: '/auth/google/callback',
+  proxy: true
 }, (accessToken, refreshToken, profile, done) => {
   User.findOne({ googleID: profile.id })
     .then((existingUser) => {
