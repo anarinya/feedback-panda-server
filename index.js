@@ -7,7 +7,9 @@ const passport = require('passport');
 const PORT = process.env.PORT || 5000;
 
 // Grab environment variables -------------------------------------------
-require('dotenv').config({ path: 'dev.env' });
+if (process.env.NODE_ENV !== 'production') {
+  require('dotenv').config({ path: 'dev.env' });
+}
 
 ////////////////////////////////////////////////////////////////////////
 // Mongoose/MongoDB Setup
