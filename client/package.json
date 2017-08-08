@@ -4,10 +4,10 @@
   "private": true,
   "proxy": {
     "/auth/*": {
-      "target": "https://localhost:5000"
+      "target": "http://localhost:5000"
     },
     "/api/*": {
-      "target": "https://localhost:5000"
+      "target": "http://localhost:5000"
     }
   },
   "dependencies": {
