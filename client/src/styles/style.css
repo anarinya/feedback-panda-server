@@ -1,0 +1,23 @@
+.brand-logo {
+  margin-left: 0.5em;
+}
+
+.Landing {
+  text-align: center;
+}
+
+.Landing h3 {
+  margin-top: 1em;
+}
+
+.Header .logo {
+  display:block;
+  background-image: url(panda.svg);
+  height: 50px;
+  width: 50px;
+  margin: 0.5em 1em 0 1em;
+}
+
+.Header .credits {
+  margin: 0 10px;
+}
