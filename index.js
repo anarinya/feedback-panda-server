@@ -1,5 +1,6 @@
 const express = require('express');
 const mongoose = require('mongoose');
+const morgan = require('morgan');
 const cookieSession = require('cookie-session');
 const passport = require('passport');
 const bodyParser = require('body-parser');
@@ -39,6 +40,8 @@ const app = express();
 app.use(cors());
 // parses incoming requests and attaches them to req.body
 app.use(bodyParser.json());
+// Use morgan for enhanced logging
+app.use(morgan('combined'));
 // Use cookie sessions middleware
 app.use(cookieSession({
   // how long a cookie can exist before expiring (30 days)
