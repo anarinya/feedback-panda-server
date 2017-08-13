@@ -3,8 +3,6 @@ import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { Checkout } from '../billing';
 
-import pandaLogo from '../../styles/panda.svg';
-
 class Header extends Component {
   renderContent() {
     const { auth } = this.props;

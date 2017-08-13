@@ -12,6 +12,9 @@ import registerServiceWorker from './registerServiceWorker';
 import 'materialize-css/dist/css/materialize.min.css';
 import './styles/style.css';
 
+import axios from 'axios';
+window.axios = axios;
+
 const store = createStore(reducers, {}, applyMiddleware(reduxThunk));
 
 ReactDOM.render(

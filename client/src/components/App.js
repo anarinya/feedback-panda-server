@@ -3,12 +3,10 @@ import { connect } from 'react-redux';
 import { BrowserRouter as Router, Route } from 'react-router-dom';
 
 import { Header } from './layout';
-import { Landing } from './pages';
+import { Landing, Dashboard } from './pages';
+import { SurveyNew } from './surveys';
 
 import { fetchUser } from '../actions';
-
-const Dashboard = () => <div className="container"><h2>Dashboard</h2></div>;
-const SurveyNew = () => <h2>SurveyNew</h2>;
 
 class App extends Component {
   componentDidMount() {

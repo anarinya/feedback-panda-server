@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { FETCH_USER } from './types';
+import { FETCH_USER, SUBMIT_SURVEY } from './types';
 
 export const fetchUser = () => async dispatch => {
   try {
@@ -17,4 +17,10 @@ export const handleToken = token => async dispatch => {
   } catch(e) {
     console.error(`Error handling token: ${e}`);
   }
+};
+
+export const submitSurvey = values => {
+  return {
+    type: SUBMIT_SURVEY
+  };
 };

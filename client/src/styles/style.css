@@ -21,3 +21,19 @@
 .Header .credits {
   margin: 0 10px;
 }
+
+.SurveyForm button, .SurveyFormReview button {
+  margin: 1em 1em 1em 0;
+}
+
+.SurveyField .error-message {
+  margin-bottom: 1.5em;
+}
+
+.SurveyField input {
+  margin-bottom: 0.5em;
+}
+
+.SurveyFormReview .input-value {
+  margin: 1em 0;
+}

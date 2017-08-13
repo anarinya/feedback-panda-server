@@ -30,6 +30,7 @@ mongoose.connect(process.env.DEV_DB_ATLAS, { useMongoClient: true })
 
 // Import models ///////////////////////////////////////////////////////
 require('./models/User');
+require('./models/Survey');
 
 ////////////////////////////////////////////////////////////////////////
 // App Setup
@@ -59,6 +60,7 @@ require('./services/passport');
 // Wrap authorization routes with app
 require('./routes/auth')(app);
 require('./routes/billing')(app);
+require('./routes/surveys')(app);
 
 // Setup production asset handling and unhandled routes
 if (process.env.NODE_ENV === 'production') {
