@@ -46,7 +46,7 @@ function validate(values) {
   const errors = {};
 
   // If email input is provided, validate it
-  errors.emails = validateEmails(values.emails || '');
+  errors.recipients = validateEmails(values.recipients || '');
 
   // Generate errors for fields that no input was provided for
   FIELDS.forEach(({ name, label }) => {

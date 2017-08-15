@@ -3,16 +3,16 @@ const requireLogin = require('../middlewares/requireLogin');
 const requireCredits = require('../middlewares/requireCredits');
 const Mailer = require('../services/mailer');
 const surveyTemplate = require('../services/emailTemplates/surveyTemplate');
+const _ = require('lodash');
+const Path = require('path-parser');
+// built-in node library for parsing URLs
+const { URL } = require('url');
 
 const Survey = mongoose.model('surveys');
 
 module.exports = app => {
   app.get('/api/surveys/thanks', (req, res) => {
     res.send('Thanks for providing your feedback!');
-  });
-
-  app.get('/api/surveys', (req, res) => {
-
   });
 
   app.post('/api/surveys', requireLogin, requireCredits, async (req, res) => {
@@ -48,6 +48,20 @@ module.exports = app => {
 
   // the sendgrid service uses this route
   app.post('/api/surveys/webhooks', (req, res) => {
+    // Create a url pathname param parser
+    const parser = new Path('/api/surveys/:surveyID/:choice');
 
+    // Parse url for params, remove falseys & duplicates
+    const events = _.chain(req.body)
+     .map(({ email, url }) => {
+       const match = parser.test(new URL(url).pathname);
+       if (match) {
+         const { surveyID, choice } = match;
+         return { email, surveyID, choice };
+       }
+     })
+    .compact()
+    .uniqBy('email', 'surveyID')
+    .value();
   });
 };
