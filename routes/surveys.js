@@ -11,8 +11,22 @@ const { URL } = require('url');
 const Survey = mongoose.model('surveys');
 
 module.exports = app => {
-  app.get('/api/surveys/thanks', (req, res) => {
+  app.get('/api/surveys/:surveyID/:choice', (req, res) => {
     res.send('Thanks for providing your feedback!');
+  });
+
+  app.get('/api/surveys', requireLogin, async (req, res) => {
+    try {
+      // Find surveys, exclude recipients of those surveys
+      const surveys = await Survey.find({ _user: req.user.id }).select({ 
+        recipients: false 
+      });
+
+      res.send(surveys);
+    } catch(e) {
+      console.error(`Error obtaining surveys: ${e}`);
+    }
+    
   });
 
   app.post('/api/surveys', requireLogin, requireCredits, async (req, res) => {
@@ -46,13 +60,14 @@ module.exports = app => {
     }
   });
 
-  // the sendgrid service uses this route
+  // The sendgrid service uses this route
   app.post('/api/surveys/webhooks', (req, res) => {
     // Create a url pathname param parser
     const parser = new Path('/api/surveys/:surveyID/:choice');
 
     // Parse url for params, remove falseys & duplicates
-    const events = _.chain(req.body)
+    // Query and update survey/recipient in DB
+    _.chain(req.body)
      .map(({ email, url }) => {
        const match = parser.test(new URL(url).pathname);
        if (match) {
@@ -62,6 +77,22 @@ module.exports = app => {
      })
     .compact()
     .uniqBy('email', 'surveyID')
+    .each(({ surveyID, email, choice }) => {
+      Survey.updateOne({
+        // Find survey with recipient that hasn't responded
+        _id: surveyID,
+        recipients: {
+          $elemMatch: { email: email, responded: false }
+        }
+      }, {
+        // Increment yes/no property by 1, based on choice
+        $inc: { [choice]: 1 },
+        // Matches recipient from original query $elemMatch
+        $set: { 'recipients.$.responded': true },
+        // Update last responded date
+        lastResponded: new Date()
+      }).exec();
+    })
     .value();
   });
 };
